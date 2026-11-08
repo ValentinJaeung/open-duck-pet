@@ -1,0 +1,24 @@
+# 학습 결과물 (용량이 커서 커밋하지 않음)
+models/runs/
+*.onnx
+checkpoints*/
+events.out.tfevents.*
+train.log
+
+# JAX 컴파일 캐시
+.tmp/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# ROS2 빌드 결과 (1단계부터)
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# 에디터 / OS
+.vscode/
+.idea/
+.DS_Store

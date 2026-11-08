@@ -1,0 +1,32 @@
+# Open_Duck_Playground 학습/추론용 패키지 (Python 3.11)
+# 2026-11에 실제로 동작을 확인한 버전 조합입니다. 함부로 올리지 마세요.
+#   - jax 0.10+ 에서는 jax.device_put_replicated 가 제거되어 brax PPO 학습이 실패합니다.
+#   - playground 0.1+ 에서는 mujoco_playground._src.collision 이 사라져 import 가 실패합니다.
+
+# --- 핵심 (버전 고정 필수) ---
+jax[cuda12]==0.6.2
+jaxlib==0.6.2
+mujoco==3.3.4
+mujoco-mjx==3.3.4
+brax==0.12.4
+flax==0.10.7
+playground==0.0.5
+
+# --- 나머지 (확인된 버전) ---
+optax==0.2.8
+orbax-checkpoint==0.12.9
+jaxtyping==0.3.11
+etils==1.15.0
+numpy==2.4.6
+scipy==1.17.1
+tensorflow==2.21.0
+keras==3.15.1
+tf2onnx==1.17.0
+onnx==1.23.2
+onnxruntime==1.31.1
+tensorboard==2.21.0
+tensorboardX==2.6.5
+matplotlib==3.11.2
+mediapy==1.2.7
+pygame==2.6.1
+framesviewer==1.1.0

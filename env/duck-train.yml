@@ -1,0 +1,12 @@
+# 학습/추론용 conda 환경
+# 사용법: scripts/setup_train_env.sh 가 이 파일로 환경을 만들고 환경 변수까지 설정합니다.
+# conda-forge 만 사용합니다 (Anaconda 기본 채널 약관 동의 불필요).
+name: duck
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - -r requirements-train.txt

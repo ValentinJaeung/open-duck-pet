@@ -1,0 +1,6 @@
+[submodule "third_party/Open_Duck_Playground"]
+	path = third_party/Open_Duck_Playground
+	url = https://github.com/apirrone/Open_Duck_Playground.git
+[submodule "third_party/Open_Duck_Mini"]
+	path = third_party/Open_Duck_Mini
+	url = https://github.com/apirrone/Open_Duck_Mini.git
