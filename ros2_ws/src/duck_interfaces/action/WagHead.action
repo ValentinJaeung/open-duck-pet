@@ -1,0 +1,8 @@
+# 고개 좌우 흔들기. times: 왕복 횟수 (0 이하면 3)
+int32 times
+---
+bool success
+string message
+float32 duration
+---
+float32 progress

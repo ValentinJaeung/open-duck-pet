@@ -1,0 +1,8 @@
+# 춤: 고개 + 몸 흔들기를 섞은 키프레임 동작. duration: 초 (0 이하면 6초)
+float32 duration
+---
+bool success
+string message
+float32 duration
+---
+float32 progress

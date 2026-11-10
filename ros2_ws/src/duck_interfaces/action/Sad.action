@@ -1,0 +1,8 @@
+# 슬픔 표현: 고개를 천천히 떨구고 좌우로 느리게 저음. intensity 0.0~1.0 (0 이하면 1.0)
+float32 intensity
+---
+bool success
+string message
+float32 duration
+---
+float32 progress

@@ -1,0 +1,10 @@
+# 공을 목표 물체 쪽으로 민다. (RL 로 학습한 상위 정책이 속도 명령을 내고, 걷기 정책이 걷는다)
+string ball               # 밀 물체 (예: blue_ball)
+string goal               # 목표 물체 (예: green_block, red_block, person)
+---
+bool success
+string message
+float32 final_distance    # 마지막으로 추정한 공-목표 거리(m). 모르면 -1
+---
+string state              # searching / pushing
+float32 ball_goal_distance

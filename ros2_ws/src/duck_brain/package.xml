@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>duck_brain</name>
+  <version>0.1.0</version>
+  <description>로컬 LLM(Ollama) 도구 호출로 자연어 명령을 오리 기술(ROS2 Action)로 실행하는 두뇌</description>
+  <maintainer email="tlswodnd123456@gmail.com">valen</maintainer>
+  <license>Apache-2.0</license>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>duck_interfaces</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

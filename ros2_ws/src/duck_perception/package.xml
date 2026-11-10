@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>duck_perception</name>
+  <version>0.1.0</version>
+  <description>머리 카메라 물체 탐지(YOLO) + 깊이로 3D 위치 + 오도메트리 + 의미 지도</description>
+  <maintainer email="tlswodnd123456@gmail.com">valen</maintainer>
+  <license>Apache-2.0</license>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>duck_interfaces</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

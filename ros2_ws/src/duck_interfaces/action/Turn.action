@@ -1,0 +1,8 @@
+# 제자리 회전. angle: 라디안, 양수 = 왼쪽(반시계), 음수 = 오른쪽
+float32 angle
+---
+bool success
+string message
+float32 duration      # 실제로 걸린 시간(초)
+---
+float32 progress      # 0.0 ~ 1.0 (시간 기준 추정값)

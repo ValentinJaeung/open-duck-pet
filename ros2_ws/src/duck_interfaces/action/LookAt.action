@@ -1,0 +1,9 @@
+# 고개만 움직여 방향 보기. 몸은 그대로. 각도 단위는 라디안.
+# yaw: 양수 = 왼쪽, pitch: 양수 = 위 (부호는 실제 시뮬레이션으로 확인 후 문서에 기록)
+float32 yaw
+float32 pitch
+---
+bool success
+string message
+---
+float32 progress

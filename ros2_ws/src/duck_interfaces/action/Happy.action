@@ -1,0 +1,8 @@
+# 기쁨 표현: 고개를 들고 갸웃거리며 몸을 좌우로 흔듦. intensity 0.0~1.0 (0 이하면 1.0)
+float32 intensity
+---
+bool success
+string message
+float32 duration
+---
+float32 progress

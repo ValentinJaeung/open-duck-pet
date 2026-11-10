@@ -1,0 +1,46 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Plane Cell Count: 10
+      Cell Size: 0.5
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: true
+      Marker Scale: 0.4
+    - Class: rviz_default_plugins/MarkerArray
+      Name: 의미 지도 (기억한 물체)
+      Enabled: true
+      Topic:
+        Value: /semantic_map
+    - Class: rviz_default_plugins/Image
+      Name: 탐지 화면 (YOLO 상자)
+      Enabled: true
+      Topic:
+        Value: /detections_image
+    - Class: rviz_default_plugins/Image
+      Name: 오리 시점
+      Enabled: false
+      Topic:
+        Value: /camera/image
+  Global Options:
+    Fixed Frame: odom
+    Frame Rate: 30
+  Name: root
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: 위에서 본 지도
+      Scale: 120
+      X: 0.5
+      Y: 0.3
+    Saved: ~
+Window Geometry:
+  Height: 800
+  Width: 1280

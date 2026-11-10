@@ -1,0 +1,8 @@
+# 직진. distance: 미터, 양수 = 앞, 음수 = 뒤. 거리는 속도 x 시간으로 추정(정확하지 않음)
+float32 distance
+---
+bool success
+string message
+float32 duration
+---
+float32 progress
