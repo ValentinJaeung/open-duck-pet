@@ -1,0 +1,12 @@
+# 인식(YOLO 학습/합성 데이터 생성)과 개방형 탐지(OWLv2) 서버용 환경 (.venv-vision, Python 3.11). 2026-11 에 동작을 확인한 버전.
+#   uv venv --python 3.11 .venv-vision && uv pip install --python .venv-vision/bin/python -r env/requirements-vision.txt
+torch==2.15.0
+torchvision==0.29.2
+ultralytics==8.4.207
+mujoco==3.3.4
+numpy==2.2.6
+pillow==13.0.0
+scipy==1.17.1
+transformers==5.22.2
+accelerate==1.15.0
+timm==1.0.31

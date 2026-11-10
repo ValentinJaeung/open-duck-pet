@@ -1,0 +1,13 @@
+# ROS2 Humble(시스템 Python 3.10) 노드용 환경(.venv-ros). 학습용 .venv(3.11)와 별개.
+# rclpy 는 ROS 가 제공하므로 여기엔 없음. numpy 는 ROS(cv_bridge 등) 호환을 위해 1.x.
+numpy<2
+mujoco==3.3.4
+mujoco-mjx==3.3.4
+jax==0.6.2
+jaxlib==0.6.2
+brax==0.12.4
+flax==0.10.7
+playground==0.0.5
+onnxruntime
+pillow
+py-trees==2.6.0

@@ -5,6 +5,12 @@ checkpoints*/
 events.out.tfevents.*
 train.log
 
+# 학습 데이터와 학습 결과물 (생성 방법은 docs/PROGRESS.md 의 '다시 만드는 방법')
+datasets/
+models/yolo/
+models/push/
+sim/rl/scene_push_ball.xml
+
 # JAX 컴파일 캐시
 .tmp/
 
@@ -22,3 +28,8 @@ ros2_ws/log/
 .vscode/
 .idea/
 .DS_Store
+.venv/
+.venv-ros/
+.venv-vision/
+.claude/settings.local.json
+logs/
