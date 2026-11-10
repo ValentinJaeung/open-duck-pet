@@ -24,7 +24,10 @@
 | 5 | 자율 행동 (심심함/에너지/외로움 + Behavior Tree, 사람 따라가기) | ✅ |
 | 6 | 새 RL 기술 | ⚠️ 앉기 불가, 공 밀기는 ROS 연동 실패(0/10), 버튼/계단 미착수 |
 | 8 | VLM(OWLv2) 개방형 탐지: 처음 보는 물체 이름으로 찾아가기 | ✅ (결과 변동 있음) |
+| 탐험 | 못 찾으면 방의 다른 곳으로 옮겨 가며 찾기 (깊이 스캔) | ✅ (기존 방식이 실패한 위치 5/5, 표본 적음) |
 | 7 | 음성 입력 | 📋 |
+
+**다음:** 탐험 종단 시험(자율 행동·LLM과 함께) → 공 밀기를 센서/구조 변경으로 재시도 → 충돌 모델 추가 후 앉기·버튼 → 음성. 자세한 순서는 PROGRESS.md 맨 위.
 
 전체 실행: `bash scripts/run_ollama.sh` → `RATE=6 bash scripts/run_all.sh` → `bash scripts/say.sh "go to the red block"` (자세한 순서와 환경 3개는 PROGRESS.md 맨 위).
 학습 데이터와 학습 결과물(`datasets/`, `models/`)은 저장소에 없습니다. 다시 만드는 방법도 PROGRESS.md 에 있습니다.
