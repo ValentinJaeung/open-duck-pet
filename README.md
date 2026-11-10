@@ -12,11 +12,22 @@
 
 ## 현재 상태
 
+걷기 → 인식 → 언어 명령 → 자율 행동 → 개방형 탐지까지 동작합니다. 단계별 결과, 측정 수치, 한계는 **[docs/PROGRESS.md](docs/PROGRESS.md)**, 계획은 [docs/ROADMAP.md](docs/ROADMAP.md).
+
 | 단계 | 내용 | 상태 |
 |---|---|---|
-| 준비 | RL 걷기 정책 학습 (MJX + PPO, 3억 스텝) | ✅ 완료 (WSL2) |
-| 0 | Ubuntu 환경 구축 | ⏳ 진행 예정 |
-| 1~7 | 방 모델링, ROS2, 인식, LLM, 자율 행동, 새 기술, 음성 | 📋 [로드맵](docs/ROADMAP.md) |
+| 준비 | RL 걷기 정책 (MJX + PPO, 3억 스텝) | ✅ |
+| 1 | 방 + 머리 카메라 + ROS2(Humble) 브리지 | ✅ |
+| 2 | 기술 Action (turn, walk, look_at, 감정 4종) | ✅ |
+| 3 | 인식 (YOLO + 깊이 + 오도메트리 + 지도) | ✅ |
+| 4 | 로컬 LLM 도구 호출 (`"go to the red block and look up"`) | ✅ |
+| 5 | 자율 행동 (심심함/에너지/외로움 + Behavior Tree, 사람 따라가기) | ✅ |
+| 6 | 새 RL 기술 | ⚠️ 앉기 불가, 공 밀기는 ROS 연동 실패(0/10), 버튼/계단 미착수 |
+| 8 | VLM(OWLv2) 개방형 탐지: 처음 보는 물체 이름으로 찾아가기 | ✅ (결과 변동 있음) |
+| 7 | 음성 입력 | 📋 |
+
+전체 실행: `bash scripts/run_ollama.sh` → `RATE=6 bash scripts/run_all.sh` → `bash scripts/say.sh "go to the red block"` (자세한 순서와 환경 3개는 PROGRESS.md 맨 위).
+학습 데이터와 학습 결과물(`datasets/`, `models/`)은 저장소에 없습니다. 다시 만드는 방법도 PROGRESS.md 에 있습니다.
 
 ## 빠른 시작 (Ubuntu 24.04 + NVIDIA GPU)
 
