@@ -1,4 +1,4 @@
-# 물체 쪽으로 걸어가기. 카메라로 물체 방향을 계속 보며 접근한다. 안 보이면 돌면서 찾는다.
+# 물체 쪽으로 걸어가기. 카메라로 물체 방향을 계속 보며 접근한다. 안 보이면 돌면서 찾고, 그래도 없으면 방의 다른 곳으로 옮겨 가며 찾는다(탐험).
 string target             # red_block, green_block, blue_ball
 float32 stop_distance     # 몸통 중심에서 물체까지 멈출 거리(m). 0 이하면 기본값 0.35
 ---
@@ -6,6 +6,6 @@ bool success
 string message
 float32 final_distance    # 마지막으로 잰 물체까지 거리(m). 모르면 -1
 ---
-string state              # searching / approaching
+string state              # searching / exploring / approaching
 float32 distance          # 현재 추정 거리(m), 모르면 -1
 float32 bearing_deg       # 물체 방향(도, 0=정면, +왼쪽)

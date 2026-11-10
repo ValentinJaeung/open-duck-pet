@@ -22,7 +22,7 @@ from duck_brain.planner import Planner, run_agent
 
 YOLO_CLASSES = {"red_block", "green_block", "blue_ball", "person"}
 STOP_WORDS = {"stop", "halt", "cancel", "멈춰", "그만", "정지"}
-ACTION_TIMEOUT = 150.0     # s (실제 시간). walk_to 는 최대 90 시뮬레이션 초까지 걸릴 수 있음
+ACTION_TIMEOUT = 330.0     # s (실제 시간). walk_to 는 탐험하면 최대 220 시뮬레이션 초(시뮬레이션이 실시간의 약 0.8배)
 
 
 class Brain(Node):

@@ -62,8 +62,19 @@ class DuckSimBridge(Node):
         onnx = os.path.realpath(self.get_parameter("onnx").value)
         self.get_logger().info(f"정책: {onnx}")
 
+        self.declare_parameter("start_x", 0.0)          # 오리 출발 위치/방향(시험용). 오도메트리는 여기를 (0,0,0) 으로 시작함
+        self.declare_parameter("start_y", 0.0)
+        self.declare_parameter("start_yaw", 0.0)
         self.core = HeadlessDuck(onnx, dynamic_objects=self.get_parameter("dynamic_objects").value, novel=self.get_parameter("novel_objects").value)
         self.m = self.core.m
+        sx, sy, syaw = (float(self.get_parameter(n).value) for n in ("start_x", "start_y", "start_yaw"))
+        if sx or sy or syaw:
+            q = self.core.data.qpos
+            q[0], q[1] = sx, sy
+            q[3:7] = [math.cos(syaw / 2), 0.0, 0.0, math.sin(syaw / 2)]
+            mujoco.mj_forward(self.core.model, self.core.data)
+            self.get_logger().info(f"출발 위치: ({sx:.2f}, {sy:.2f}), 방향 {syaw:.2f} rad")
+        self.novel = bool(self.get_parameter("novel_objects").value)
         self.vel_cmd = [0.0, 0.0, 0.0]            # vx, vy, wz
         self.head_cmd = [0.0, 0.0, 0.0, 0.0]      # neck_pitch, head_pitch, head_yaw, head_roll
 
@@ -170,7 +181,8 @@ class DuckSimBridge(Node):
             self.pub_dbg.publish(pm)
             if self.pub_obj_dbg is not None and self.m.model.nbody > 0:
                 d = self.m.data
-                objs = {n: [round(float(v), 3) for v in d.xpos[self.m.model.body(n).id][:2]] for n in ("blue_ball", "red_block", "green_block")}
+                names = ("blue_ball", "red_block", "green_block") + (("yellow_cup", "orange_ball", "purple_box") if self.novel else ())
+                objs = {n: [round(float(v), 3) for v in d.xpos[self.m.model.body(n).id][:2]] for n in names}
                 self.pub_obj_dbg.publish(String(data=json.dumps(objs)))
             if self.pub_person_dbg is not None:
                 pp = PoseStamped()

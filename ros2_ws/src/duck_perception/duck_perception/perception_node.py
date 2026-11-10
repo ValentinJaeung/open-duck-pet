@@ -25,7 +25,7 @@ import numpy as np
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Point, TransformStamped, Twist
-from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
+from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
 from std_msgs.msg import String
 from tf2_ros import TransformBroadcaster
 from visualization_msgs.msg import Marker, MarkerArray
@@ -64,6 +64,12 @@ PERSON_HALF_DEPTH = 0.08             # 사람은 몸 두께 절반 정도를 더
 HALF_SIZE = 0.045                    # 물체 반 크기(m): 상자/공 반지름이 약 0.04~0.05
 MIN_OBS = 3                          # 지도에 표시하려면 최소 관측 횟수
 CMD_TIMEOUT = 0.5                    # 브리지와 같이, 이 시간 동안 명령이 없으면 정지로 본다
+# 깊이 → 가상 레이저 스캔(/depth_scan): 몸통 기준 방향별 '가장 가까운 장애물' 거리. 탐험할 때 갈 수 있는 쪽을 고르는 데 씀
+FLOOR_Z = -0.155                     # 몸통 좌표에서 바닥 높이(m). 서 있을 때 몸통 높이 약 0.155~0.158
+OBST_MIN_H, OBST_MAX_H = 0.04, 0.6   # 바닥 위 이 높이 사이의 점을 장애물로 봄 (바닥 자체와 천장 쪽 제외)
+SCAN_HALF, SCAN_STEP = math.radians(50), math.radians(2)
+SCAN_MAX = 3.0                       # 장애물이 안 보이는 방향의 거리(m)
+SELF_R = 0.12                        # 몸통 중심에서 이 안의 점은 자기 몸(다리/발)으로 보고 무시
 
 
 class Perception(Node):
@@ -98,6 +104,7 @@ class Perception(Node):
         self.pub_map = self.create_publisher(MarkerArray, "/semantic_map", 1)
         self.pub_img = self.create_publisher(Image, "/detections_image", 1)
         self.pub_scene = self.create_publisher(String, "/scene", 1)
+        self.pub_scan = self.create_publisher(LaserScan, "/depth_scan", 5)
         # --- 개방형 탐지(8단계): YOLO 가 모르는 이름은 OWLv2 서버에 물어본다. 물어볼 이름은 /ovd_prompts(JSON 문자열 목록)로 받음
         self.declare_parameter("ovd_url", "http://127.0.0.1:8765")
         self.declare_parameter("ovd_hz", 2.0)
@@ -242,8 +249,48 @@ class Perception(Node):
             o = self.make_obj(label, score, (x0, y0, x1, y1), m.width, m.height, self.depth, Rcb, pcb, f, cx, cy, now)
             out.objects.append(o)
         self.pub_det.publish(out)
+        self.publish_scan(m.header, self.depth, Rcb, pcb, f, cx, cy)
         self.publish_annotated(m, dets + [(l, sc, *bx) for (l, sc, bx, t) in self.ovd_vis if self.now_s() - t < 1.5])
         self.publish_map(now)
+
+    def publish_scan(self, header, depth_img, Rcb, pcb, f, cx, cy, stride=2):
+        """깊이 영상 → 몸통 기준 가상 레이저 스캔. 각 방향 칸: 장애물 최소 거리, 장애물 없이 보이기만 하면 SCAN_MAX, 안 보이면 nan"""
+        d = depth_img[::stride, ::stride]
+        vs, us = np.mgrid[0:depth_img.shape[0]:stride, 0:depth_img.shape[1]:stride]
+        ok = (d > 0.05) & (d < 6.0)
+        z, u, v = d[ok], us[ok], vs[ok]
+        pc = np.stack([(u - cx) / f * z, -(v - cy) / f * z, -z], axis=1)
+        pb = pc @ Rcb.T + pcb                                   # 몸통 좌표 (x 앞, y 왼쪽, z 위)
+        r = np.hypot(pb[:, 0], pb[:, 1])
+        ang = np.arctan2(pb[:, 1], pb[:, 0])
+        h = pb[:, 2] - FLOOR_Z
+        # 걸을 때 몸통이 1~2° 만 기울어도 1m 밖 바닥이 3~4cm 높아 보임 → 바닥 후보 점으로 평면 z = ax + by + c 를 매 프레임 맞춤
+        for _ in range(2):
+            fl = (np.abs(h) < 0.05) & (r < 2.5)
+            if fl.sum() < 200:
+                break
+            A = np.stack([pb[fl, 0], pb[fl, 1], np.ones(fl.sum())], axis=1)
+            coef = np.linalg.lstsq(A, pb[fl, 2], rcond=None)[0]
+            h = pb[:, 2] - (pb[:, 0] * coef[0] + pb[:, 1] * coef[1] + coef[2])
+        n = int(round(2 * SCAN_HALF / SCAN_STEP)) + 1
+        idx = np.round((ang + SCAN_HALF) / SCAN_STEP).astype(int)
+        keep = (idx >= 0) & (idx < n) & (r > SELF_R)
+        ranges = np.full(n, np.nan, np.float32)
+        seen = np.bincount(idx[keep], minlength=n) > 0
+        ranges[seen] = SCAN_MAX
+        obst = keep & (h > OBST_MIN_H) & (h < OBST_MAX_H)
+        if obst.any():
+            mins = np.full(n, np.inf)
+            np.minimum.at(mins, idx[obst], r[obst])
+            hit = np.isfinite(mins)
+            ranges[hit] = np.minimum(mins[hit], SCAN_MAX)
+        s = LaserScan()
+        s.header = header
+        s.header.frame_id = "base_link"
+        s.angle_min, s.angle_max, s.angle_increment = -SCAN_HALF, SCAN_HALF, SCAN_STEP
+        s.range_min, s.range_max = float(SELF_R), float(SCAN_MAX)
+        s.ranges = ranges.tolist()
+        self.pub_scan.publish(s)
 
     # ---- 의미 지도 ----
     def update_map(self, label, pos, now, depth):
